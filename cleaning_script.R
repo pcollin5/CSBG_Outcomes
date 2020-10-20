@@ -3,7 +3,8 @@
 
 packages <- c("tidyverse", "tidycensus", "leaflet", "mapview", "DT", "sf",
               "knitr", "rmarkdown", "kableExtra", "RColorBrewer", "tigris",
-              "directlabels", "officer", "flextable", "zoo", "directlabels", "readlxl")
+              "directlabels", "officer", "flextable", "zoo", "directlabels", 
+              "readxl", "lubridate", "censusxy")
 
 
 
@@ -13,20 +14,22 @@ lapply(packages, library, character.only = TRUE)
 
 
 fiscal2019 <- read_excel("fiscal2019.xlsx", 
-                         col_types = c("text", "text", "numeric", 
-                                       "date", "text", "text", "text", "text", 
-                                       "numeric", "numeric", "numeric", 
-                                       "numeric", "numeric", "numeric", 
-                                       "numeric", "numeric", "numeric", 
-                                       "numeric", "numeric", "numeric", 
-                                       "numeric", "numeric", "numeric", 
-                                       "numeric", "numeric", "numeric", 
-                                       "numeric", "numeric", "text", "numeric", 
-                                       "text", "text", "text", "text", "text", 
-                                       "numeric", "numeric", "text", "text", 
-                                       "date", "text", "numeric", "date", 
-                                       "date", "text", "numeric", "text", 
-                                       "text", "numeric"))
+                              col_types = c("text", "text", "numeric", 
+                                                      "date", "skip", "text", "text", "text", 
+                                                      "text", "numeric", "numeric", "numeric", 
+                                                      "numeric", "numeric", "numeric", 
+                                                      "numeric", "numeric", "numeric", 
+                                                      "numeric", "numeric", "numeric", 
+                                                      "numeric", "numeric", "numeric", 
+                                                      "numeric", "numeric", "numeric", 
+                                                      "numeric", "numeric", "numeric", 
+                                                      "text", "date", "text", "text", "text", 
+                                                      "text", "text", "numeric", "numeric", 
+                                                      "numeric", "text", "skip", "text", 
+                                                      "date", "text", "numeric", "date", 
+                                                      "date", "text", "numeric", "text", 
+                                                      "text", "numeric"))
+
 
 #### load color scheme ####
 
@@ -82,3 +85,15 @@ scale_fill_uethda <- function(palette = "main", discrete = TRUE, reverse = FALSE
     scale_fill_gradientn(colours = pal(256), ...)
   }
 }
+
+
+
+#### geocode the addressess ####
+
+
+
+fiscal2019_sf <- cxy_geocode(fiscal2019, street = "Address1", city = "City", state = "State", zip = "ZIP", class = "sf", output = "full", return = "geographies", vintage = 'Current_Current')
+
+
+
+mapview(fiscal2019_sf, zcol = "QuestionSetDescription")
